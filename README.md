@@ -1,6 +1,6 @@
 Helper functions for [`auth0-js`](https://www.npmjs.com/package/auth0-js).
 
-Keeps your `accessToken` up-to-date by calling `checkSession()` for you.
+Keeps your `accessToken` up to date by calling `checkSession()` for you.
 
 On startup:
 
