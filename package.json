@@ -1,0 +1,22 @@
+{
+  "name": "auth0-helpers",
+  "version": "0.1.0",
+  "description": "Helpers for auth0-js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/lorensr/auth0-helpers.git"
+  },
+  "keywords": [
+    "auth0"
+  ],
+  "author": "Loren Sands-Ramshaw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lorensr/auth0-helpers/issues"
+  },
+  "homepage": "https://github.com/lorensr/auth0-helpers#readme"
+}
