@@ -83,7 +83,7 @@ const refreshToken = doLoginIfNeeded =>
 const MINUTE = 1000 * 60,
   HOUR = MINUTE * 60
 
-export const getAuthToken = ({ doLoginIfNeeded = false }) => {
+export const getAuthToken = ({ doLoginIfNeeded = false } = {}) => {
   const token = localStorage.getItem('auth.accessToken'),
     authTokenExists = !!token
 
