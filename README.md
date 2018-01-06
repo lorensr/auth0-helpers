@@ -59,4 +59,6 @@ The token and expiration are stored in localStorage under `'auth.accessToken'` a
 
 We recommend setting the "Token Expiration For Browser Flows" to `86400` seconds (24 hours, the max) so that `checkSession()` has to be called less frequently. We also recommend setting `SSO Cookie Timeout` to `43200` minutes (30 days, the max). Then `checkSession()` will work for `min(3 days since the last login or checkSession, 30 days)`.
 
+A `logout()` function that doesn't redirect the user away from the app has [not yet been implemented](https://github.com/auth0/auth0.js/issues/618).
+
 If you have questions or would like something to change, [check out the code](https://github.com/lorensr/auth0-helpers/blob/master/index.js)—it's short!
