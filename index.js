@@ -56,11 +56,11 @@ export const logout = () => {
   auth.logout({ returnTo: returnToAfterLogout })
 }
 
-const refreshToken = doLoginIfNeeded =>
+const refreshToken = doLoginIfTokenExpired =>
   new Promise((resolve, reject) => {
     auth.checkSession(checkSessionOptions, (error, authResult) => {
       if (error) {
-        if (doLoginIfNeeded) {
+        if (doLoginIfTokenExpired) {
           login({
             onCompleted: (error, token) => {
               if (error) {
@@ -83,7 +83,7 @@ const refreshToken = doLoginIfNeeded =>
 const MINUTE = 1000 * 60,
   HOUR = MINUTE * 60
 
-export const getAuthToken = ({ doLoginIfNeeded = false } = {}) => {
+export const getAuthToken = ({ doLoginIfTokenExpired = false } = {}) => {
   const token = localStorage.getItem('auth.accessToken'),
     authTokenExists = !!token
 
@@ -94,10 +94,10 @@ export const getAuthToken = ({ doLoginIfNeeded = false } = {}) => {
       willExpireSoon = expiration < now + HOUR
 
     if (isExpired) {
-      return refreshToken(doLoginIfNeeded)
+      return refreshToken(doLoginIfTokenExpired)
     } else {
       if (willExpireSoon) {
-        refreshToken(doLoginIfNeeded)
+        refreshToken(doLoginIfTokenExpired)
       }
 
       return token

@@ -46,14 +46,14 @@ logout()
 
 // when making API requests:
 const token = await getAuthToken({
-  doLoginIfNeeded: true
+  doLoginIfTokenExpired: true
 })
 if (token) {
   headers.authorization = `Bearer ${token}`
 }
 ```
 
-`getAuthToken` returns a Promise. It resolves immediately if the latest token isn't expired. If it is expired, it tries `checkSession()` to get a new token. If it can't and `doLoginIfNeeded` is `true`, then it does an auth call (`client.authorize`, or `client.popup.authorize` if you set `usePopup` to `true`). If there is no token (because `logout()` has been called, or `login()` has never been called in this browser, or localStorage has been cleared), it returns `null`.
+`getAuthToken` returns a Promise. It resolves immediately if the latest token isn't expired. If it is expired, it tries `checkSession()` to get a new token. If it can't and `doLoginIfTokenExpired` is `true`, then it does an auth call (`client.authorize`, or `client.popup.authorize` if you set `usePopup` to `true`). If there is no token (because `logout()` has been called, or `login()` has never been called in this browser, or localStorage has been cleared), it returns `null`.
 
 The token and expiration are stored in localStorage under `'auth.accessToken'` and `'auth.expiration'`.
 
