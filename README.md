@@ -63,7 +63,34 @@ A `logout()` function that doesn't cause a page reload has [not yet been impleme
 
 If you have questions or would like something to change, [check out the code](https://github.com/lorensr/auth0-helpers/blob/master/index.js)—it's short!
 
-The token and expiration are stored in localStorage under `'auth.accessToken'` and `'auth.expiration'`.
+### Cookies
+
+By default, on login, the token and expiration are stored in localStorage under `'auth.accessToken'` and `'auth.expiration'`. If you would like to store the token in a cookie instead, add this to your `initAuthHelpers()` call:
+
+```
+initAuthHelpers({
+  ...
+  cookieOptions: {
+    name: 'my-auth-cookie',
+    attributes: inDevelopment
+      ? {
+          domain: 'myapp.test'
+        }
+      : {
+          domain: 'myapp.com',
+          secure: true
+        }
+  }
+}
+```
+
+Here we're using the root `'myapp.com'` to share the cookie among the root and all subdomains (versus localStorage, which is per-host). To test, add these to your `/etc/hosts` file:
+
+```
+127.0.0.1 myapp.test
+127.0.0.1 foo.myapp.test
+127.0.0.1 bar.myapp.test
+```
 
 ## Auth0 setup
 

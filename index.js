@@ -1,10 +1,14 @@
+import cookies from 'js-cookie'
+
 let intervalId,
   auth,
   usePopup,
   authOptions,
   onError,
   checkSessionOptions,
-  returnToAfterLogout
+  returnToAfterLogout,
+  cookieOptions,
+  useCookie
 
 export const initAuthHelpers = config => {
   auth = config.client
@@ -13,6 +17,8 @@ export const initAuthHelpers = config => {
   checkSessionOptions = config.checkSessionOptions
   onError = config.onError || Function.prototype
   returnToAfterLogout = config.returnToAfterLogout || window.location.origin
+  cookieOptions = config.cookieOptions
+  useCookie = !!cookieOptions
 
   if (!intervalId) {
     intervalId = setInterval(() => getAuthToken(), 50 * MINUTE)
@@ -20,7 +26,11 @@ export const initAuthHelpers = config => {
 }
 
 function handleAuthResult({ expiresIn: expiresInSeconds, accessToken }) {
-  localStorage.setItem('auth.accessToken', accessToken)
+  if (useCookie) {
+    cookies.set(cookieOptions.name, accessToken, cookieOptions.attributes)
+  } else {
+    localStorage.setItem('auth.accessToken', accessToken)
+  }
 
   const expiration = expiresInSeconds * 1000 + Date.now()
   localStorage.setItem('auth.expiration', expiration)
@@ -34,13 +44,12 @@ export const login = ({ onCompleted, withUserInfo }) => {
     } else {
       handleAuthResult(authResult)
     }
+    console.log({ authResult })
 
     onCompleted && onCompleted(error, authResult && authResult.accessToken)
 
     if (withUserInfo) {
-      auth.client.userInfo(authResult.accessToken, (error, user) => {
-        withUserInfo(error, user)
-      })
+      auth.client.userInfo(authResult.accessToken, withUserInfo)
     }
   }
 
@@ -52,7 +61,12 @@ export const login = ({ onCompleted, withUserInfo }) => {
 }
 
 export const logout = () => {
-  localStorage.removeItem('auth.accessToken')
+  if (useCookie) {
+    cookies.remove(cookieOptions.name)
+  } else {
+    localStorage.removeItem('auth.accessToken')
+  }
+
   auth.logout({ returnTo: returnToAfterLogout })
 }
 
@@ -84,8 +98,10 @@ const MINUTE = 1000 * 60,
   HOUR = MINUTE * 60
 
 export const getAuthToken = ({ doLoginIfTokenExpired = false } = {}) => {
-  const token = localStorage.getItem('auth.accessToken'),
-    authTokenExists = !!token
+  const token = useCookie
+    ? cookies.get(cookieOptions.name)
+    : localStorage.getItem('auth.accessToken')
+  const authTokenExists = !!token
 
   if (authTokenExists) {
     const expiration = parseInt(localStorage.getItem('auth.expiration'), 10),
