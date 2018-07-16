@@ -26,7 +26,7 @@ function handleAuthResult({ expiresIn: expiresInSeconds, accessToken }) {
   localStorage.setItem('auth.expiration', expiration)
 }
 
-export const login = ({ onCompleted, withUserInfo }) => {
+export const login = ({ onCompleted, withUserInfo } = {}) => {
   function cb(error, authResult) {
     if (error) {
       onError(error)
