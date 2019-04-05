@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/auth0-helpers.svg)](https://www.npmjs.com/package/auth0-helpers)
+
 `npm i auth0-helpers`
 
 Helper functions for [`auth0-js`](https://www.npmjs.com/package/auth0-js).
