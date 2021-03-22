@@ -1,6 +1,6 @@
 {
   "name": "auth0-helpers",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Helpers for auth0-js",
   "main": "dist/index.js",
   "scripts": {
