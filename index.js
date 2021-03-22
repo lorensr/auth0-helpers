@@ -4,15 +4,21 @@ let intervalId,
   authOptions,
   onError,
   checkSessionOptions,
-  returnToAfterLogout
+  returnToAfterLogout,
+  defaultReturnTo = ''
 
-export const initAuthHelpers = config => {
+const IN_BROWSER = typeof window !== 'undefined'
+if (IN_BROWSER) {
+  defaultReturnTo = window.location.origin
+}
+
+export const initAuthHelpers = (config) => {
   auth = config.client
   usePopup = config.usePopup
   authOptions = config.authOptions
   checkSessionOptions = config.checkSessionOptions
   onError = config.onError || Function.prototype
-  returnToAfterLogout = config.returnToAfterLogout || window.location.origin
+  returnToAfterLogout = config.returnToAfterLogout || defaultReturnTo
 
   if (!intervalId) {
     intervalId = setInterval(() => getAuthToken(), 50 * MINUTE)
@@ -56,7 +62,7 @@ export const logout = () => {
   auth.logout({ returnTo: returnToAfterLogout })
 }
 
-const refreshToken = doLoginIfTokenExpired =>
+const refreshToken = (doLoginIfTokenExpired) =>
   new Promise((resolve, reject) => {
     auth.checkSession(checkSessionOptions, (error, authResult) => {
       if (error) {
@@ -68,7 +74,7 @@ const refreshToken = doLoginIfTokenExpired =>
               } else {
                 resolve(token)
               }
-            }
+            },
           })
         } else {
           reject(error)
@@ -84,7 +90,7 @@ const MINUTE = 1000 * 60,
   HOUR = MINUTE * 60
 
 export const getAuthToken = ({ doLoginIfTokenExpired = false } = {}) => {
-  const token = localStorage.getItem('auth.accessToken'),
+  const token = IN_BROWSER && localStorage.getItem('auth.accessToken'),
     authTokenExists = !!token
 
   if (authTokenExists) {
